@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eblog.mapper.ViewMapper">
+    <select id="selectPostRef" resultType="com.example.eblog.view.PostRef">
+        select m_post.id as postId, username, title, name, m_post.comment_count, avatar, vip_level, m_post.created, level, m_post.status, recommend, view_count
+        from m_post, m_user, m_category
+        where m_post.user_id = m_user.id and m_post.category_id = m_category.id
+    </select>
+
+    <select id="selectPostRefByCategory" parameterType="int" resultType="com.example.eblog.view.PostRef">
+        select m_post.id as postId, username, title, name, m_post.comment_count, avatar, vip_level, m_post.created, level, m_post.status, recommend, view_count
+        from m_post, m_user, m_category
+        where m_post.user_id = m_user.id and m_post.category_id = m_category.id and m_post.category_id = #{id}
+    </select>
+    <select id="selectPostRefByTimeOrder" resultType="com.example.eblog.view.PostRef">
+        SELECT m_post.id AS postId, username, title, NAME, m_post.comment_count, avatar, vip_level, m_post.created, LEVEL, m_post.status, recommend, view_count
+        FROM m_post, m_user, m_category
+        WHERE m_post.user_id = m_user.id AND m_post.category_id = m_category.id
+        ORDER BY created DESC
+    </select>
+    <select id="selectPostRefByCategoryOrderByTime" resultType="com.example.eblog.view.PostRef">
+        select m_post.id as postId, username, title, name, m_post.comment_count, avatar, vip_level, m_post.created, level, m_post.status, recommend, view_count
+        from m_post, m_user, m_category
+        where m_post.user_id = m_user.id and m_post.category_id = m_category.id and m_post.category_id = #{id}
+        ORDER BY created DESC
+    </select>
+    <select id="selectPostRefOrderByCommentCount" resultType="com.example.eblog.view.PostRef">
+        SELECT m_post.id AS postId, username, title, NAME, m_post.comment_count, avatar, vip_level, m_post.created, LEVEL, m_post.status, recommend, view_count
+        FROM m_post, m_user, m_category
+        WHERE m_post.user_id = m_user.id AND m_post.category_id = m_category.id
+        ORDER BY comment_count DESC
+    </select>
+    <select id="selectPostRefByCategoryOrderByCommentCount" resultType="com.example.eblog.view.PostRef">
+        select m_post.id as postId, username, title, name, m_post.comment_count, avatar, vip_level, m_post.created, level, m_post.status, recommend, view_count
+        from m_post, m_user, m_category
+        where m_post.user_id = m_user.id and m_post.category_id = m_category.id and m_post.category_id = #{id}
+        ORDER BY comment_count DESC
+    </select>
+    <select id="selectCommentViewByUserId" resultType="com.example.eblog.view.CommentView">
+        select username, post_id, title, m_comment.content, m_comment.created
+        from m_post, m_user, m_comment
+        where  m_post.id = m_comment.post_id and m_user.id = m_comment.user_id and m_comment.user_id = #{id}
+        order by created desc
+    </select>
+    <select id="selectCollectionViewByUserId" resultType="com.example.eblog.view.CollectionView">
+        SELECT m_post.id as postId, m_post.title, m_user_collection.created, m_post.view_count, m_post.comment_count
+        FROM m_post, m_user_collection
+        WHERE m_post.id = post_id AND m_user_collection.user_id = #{id}
+    </select>
+    <select id="getDetailViewByPostId" resultType="com.example.eblog.view.DetailView">
+        SELECT m_post.id as postId, m_user.id as userId, m_post.title, m_category.name, m_post.status, m_post.recommend, m_post.view_count, m_post.comment_count, m_post.content, m_user.username, m_user.avatar, m_user.vip_level, m_post.created
+        FROM m_post, m_category, m_user
+        WHERE m_post.user_id = m_user.id AND m_post.category_id = m_category.id AND m_post.id = #{postId}
+    </select>
+    <select id="getCommentViewBy" resultType="com.example.eblog.view.DetailCommentView">
+        SELECT m_comment.id as commentId, m_user.id as userId, m_user.username, m_user.vip_level, m_comment.created, m_user.avatar, m_comment.content, m_comment.vote_up
+        FROM m_user, m_comment
+        WHERE m_comment.user_id = m_user.id AND m_comment.post_id = #{postId}
+    </select>
+</mapper>
